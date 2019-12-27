@@ -20,3 +20,15 @@ def post_detail(slug):
     tags = post.tags
     return render_template('posts/post_detail.html', post=post, tags=tags)
 
+
+@posts.route('/tag/<slug>')
+def tag_detail(slug):
+    tag = Tag.query.filter(Tag.slug==slug).first()
+    '''all нужет чтобы получть тип списка, без all будет типо BaseQuery.
+     Метод all  доступен потому что в ralationship'е 
+     мы указали lazy=dynamic что возвращает тип BaseQuery
+     и у BaseQuery есть много разных методов'''
+    posts = tag.posts.all()
+    return render_template('posts/tag_detail.html', tag=tag, posts=posts)
+
+
