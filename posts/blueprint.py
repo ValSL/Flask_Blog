@@ -19,7 +19,7 @@ posts = Blueprint('posts', __name__, template_folder='templates')
 @posts.route('/create', methods=['POST', 'GET'])
 def create_post():
     if request.method == 'POST':
-        title = request.form['title']  # 'title' это переменная title из класса PostForm
+        title = request.form['title']  # 'title' это переменная title из класса PostForm, это то что ввели в форме
         body = request.form['body']
 
         try:
@@ -32,6 +32,16 @@ def create_post():
 
     form = PostForm()
     return render_template('posts/create_post.html', form=form)
+
+
+@posts.route('/<slug>/edit', methods=['POST', 'GET'])
+def edit_post(slug):
+    post = Post.query.filter(Post.slug==slug).first()
+
+    if request.method == 'POST':
+        form = PostForm(fromdata=request.form, obj=post)
+
+
 
 
 @posts.route('/')
