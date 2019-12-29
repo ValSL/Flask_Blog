@@ -29,8 +29,13 @@
                 <a class="nav-link" href="{{ url_for('posts.index') }}">Blog</a>
             </li>
 
+{#            <li class="nav-item">#}
+{#                <a class="nav-link" href="{{ url_for('posts.create_post') }}">New post</a>#}
+{#            </li>#}
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('posts.create_post') }}">New post</a>
+                {% if current_user.has_role('admin') %} {# current_user это объект пользователя из flask security , его не нужно импортировать, он есть сразу. А метод has_role есть в классе UserMixin, его добавляли в models при создании класса User #}
+                <a class="nav-link" href="/admin">Admin</a>
+                {% endif %}
             </li>
         </ul>
 
