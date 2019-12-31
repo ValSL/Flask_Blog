@@ -5,5 +5,6 @@ class Configuration:
     # 7) Добавление Secret Key (Далее создание моделей)
     SECRET_KEY = 'secret'
 
+    # 15) Сольи хэш
     SECURITY_PASSWORD_SALT = 'salt'
     SECURITY_PASSWORD_HASH = 'sha512_crypt'

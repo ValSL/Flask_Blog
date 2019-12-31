@@ -12,7 +12,7 @@ from app import db
 from flask import redirect
 from flask import url_for
 
-# 14) Специальный декоратор проверки залогиности
+# 14) Специальный декоратор проверки залогиности и приписываем это к create и edit post(потом конфиг)
 from flask_security import login_required
 
 
