@@ -8,6 +8,10 @@ from flask import redirect, url_for, request
 
 # 1) Импорт класса админ
 from flask_admin import Admin
+
+# 19)
+from flask_admin import AdminIndexView
+
 # 3) Импорт класса ModelView для наших моделей БД
 from flask_admin.contrib.sqla import ModelView
 
@@ -33,7 +37,7 @@ manager.add_command('db', MigrateCommand)  # (название команды, �
 # 5) Наши модели
 from models import *
 
-# 16) В новом классе AdminView переопределим методы из ModelView, чтобы ограничить доступ
+# 16) В новом классе AdminView переопределим методы из ModelView, чтобы ограничить доступ для просмотра Post и Tag во вкладке /admin
 class AdminView(ModelView):
     #Метод проверят доступность вьюхи пользователю
     def is_accessible(self):
@@ -44,10 +48,21 @@ class AdminView(ModelView):
         # Тут обращаемся к блюпринту security  его вьюхе login, Параметр next это та ссылка куда пользователь хотел попасть
         return redirect(url_for('security.login', next=request.url))
 
+# 18) Ограничение доступа целиком к админке
+# как я понял если мы вводим в сторку в браузере /admin выполняется эта функция, требует логина, если мы не админ, и вазвращает True если мы админ, и потом переходит в админку на окно home кторое указали мы ниже
+class HomeAdminView(AdminIndexView):
+    def is_accessible(self):
+        return current_user.has_role('admin')
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('security.login', next=request.url))
+
+
 
 # Admin #
 # 2) Создание экземпляра класса Admin
-admin = Admin(app)
+# 20) 'Главная FlaskApp кнопочка на админке ведет на url='/', тоесть на сайт,index_view=HomeAdminView(name='Home') там будет кнопочка home которя включает HomeAdminView'
+admin = Admin(app, 'FlaskApp', url='/', index_view=HomeAdminView(name='Home'))
 
 # 4) Добвавление в админку нашу таблицу Post
 admin.add_view(AdminView(Post, db.session))
