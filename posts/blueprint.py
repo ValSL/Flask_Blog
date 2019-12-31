@@ -40,6 +40,13 @@ def edit_post(slug):
 
     if request.method == 'POST':
         form = PostForm(fromdata=request.form, obj=post)
+        form.populate_obj(post)
+        db.session.commit()
+
+        return redirect(url_for('posts.post_detail', slug=post.slug))
+
+    form = PostForm(obj=post)
+    return render_template('posts/edit.html', form=form, post=post)
 
 
 
