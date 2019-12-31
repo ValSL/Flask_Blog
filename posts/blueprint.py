@@ -12,11 +12,16 @@ from app import db
 from flask import redirect
 from flask import url_for
 
-# posts - название блюпринта
+# 14) Специальный декоратор проверки залогиности
+from flask_security import login_required
+
+
+# 'posts' - название блюпринта
 posts = Blueprint('posts', __name__, template_folder='templates')
 
 
 @posts.route('/create', methods=['POST', 'GET'])
+@login_required
 def create_post():
     if request.method == 'POST':
         title = request.form['title']  # 'title' это переменная title из класса PostForm, это то что ввели в форме
@@ -35,6 +40,7 @@ def create_post():
 
 
 @posts.route('/<slug>/edit', methods=['POST', 'GET'])
+@login_required
 def edit_post(slug):
     post = Post.query.filter(Post.slug==slug).first()
 
