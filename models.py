@@ -50,7 +50,7 @@ class Tag(db.Model):
         return f'<Tag id{self.id}, name {self.name}'
 
 
-# 9) создание моделей
+# 9) создание моделей(далее в app)
 
 roles_users = db.Table('roles_users',
                        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')),

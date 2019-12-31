@@ -10,6 +10,11 @@ from flask_admin import Admin
 # 3) Импорт класса ModelView для наших моделей БД
 from flask_admin.contrib.sqla import ModelView
 
+# 10) Подключение SQLAlchemyUserDatastore, для хранения юзеров
+from flask_security import SQLAlchemyUserDatastore
+
+# 13) Подключение самого класса Security
+from flask_security import Security
 
 app = Flask(__name__, template_folder='templates')
 app.config.from_object(Configuration)
@@ -33,3 +38,13 @@ admin.add_view(ModelView(Post, db.session))
 
 # 6) Добвавление в админку нашу таблицу Tag (потом в конфиг)
 admin.add_view(ModelView(Tag, db.session))
+
+
+# Flask secutiry
+# 11) экземпляр userDataStore
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+
+# 12) Подключение FlaskSecurity, принимает наше приложение и хранилище
+secutiry = Security(app, user_datastore)
+
+### юзеры создаются через user_datastore.create_user(email='', password='') ###
