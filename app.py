@@ -13,7 +13,7 @@ from flask_admin.contrib.sqla import ModelView
 # 10) Подключение SQLAlchemyUserDatastore, для хранения юзеров
 from flask_security import SQLAlchemyUserDatastore
 
-# 13) Подключение самого класса Security(далее в блюпринт)
+# 13) Подключение самого класса Security(далее в блюпринт),  юзеры пока без ролей
 from flask_security import Security
 
 app = Flask(__name__, template_folder='templates')
@@ -49,3 +49,4 @@ secutiry = Security(app, user_datastore)
 
 
 ### юзеры создаются через user_datastore.create_user(email='', password='') ###
+
