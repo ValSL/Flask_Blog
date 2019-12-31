@@ -34,7 +34,7 @@
             {#            </li>#}
             <li>
                 {% if  current_user.has_role("admin")%}
-                    <a href='/admin'>Admin</a>
+                    <a class='nav-link' href='/admin'>Admin</a>
                 {% endif %}
 
                 {# А вот метод has_role есть, потому что при создании моедли User мы унаследовали UserMixin, в котором есть has_role #}
