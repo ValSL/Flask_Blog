@@ -29,14 +29,23 @@
                 <a class="nav-link" href="{{ url_for('posts.index') }}">Blog</a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('posts.create_post') }}">New post</a>
+            {#            <li class="nav-item">#}
+            {#                <a class="nav-link" href="{{ url_for('posts.create_post') }}">New post</a>#}
+            {#            </li>#}
+            <li>
+                {% if  current_user.has_role("admin")%}
+                    <a href='/admin'>Admin</a>
+                {% endif %}
+
+                {# А вот метод has_role есть, потому что при создании моедли User мы унаследовали UserMixin, в котором есть has_role #}
+
             </li>
         </ul>
 
         <form class="form-inline my-2 my-lg-0" method="GET">
 
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ request.args.get('q', '') }}">{# метод get работает как со словарем, если под ключом 'q' что-то будет, он нам это вернет, если ничего не будет, то нам вернется пустая строка '' #}
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q"
+                   value="{{ request.args.get('q', '') }}">{# метод get работает как со словарем, если под ключом 'q' что-то будет, он нам это вернет, если ничего не будет, то нам вернется пустая строка '' #}
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 

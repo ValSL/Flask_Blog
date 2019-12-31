@@ -49,4 +49,9 @@ secutiry = Security(app, user_datastore)
 
 
 ### юзеры создаются через user_datastore.create_user(email='', password='') ###
+### роли тоже user_datastore.create_role(name='', description='') ###
+### роли добавляются через user_datastore.add_role_to_user(user, role) ###
 
+### Каим образом мы даём права именно роли с именем 'admin'
+### Мы в base.html будем показывать ссылку на админку только юзерам с этой ролью
+### Поэтому идём в base.html
