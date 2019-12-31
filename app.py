@@ -37,25 +37,47 @@ manager.add_command('db', MigrateCommand)  # (название команды, �
 # 5) Наши модели
 from models import *
 
-# 16) В новом классе AdminView переопределим методы из ModelView, чтобы ограничить доступ для просмотра Post и Tag во вкладке /admin
-class AdminView(ModelView):
-    #Метод проверят доступность вьюхи пользователю
+# 22) чтобы не был одинаковый код в AdminView и HomeAdminView
+class AdminMixin:
+    #### ПОЛУЧАЕТСЯ ЧТО МЕТОДЫ is_accessible И inaccessible_callback ЕСТЬ И В ModelView и в AdminIndexView которые мы импортировали
+    # Метод проверят доступность вьюхи пользователю
     def is_accessible(self):
         return current_user.has_role('admin')
 
-    #Если какая-то конкретная вьюха не доступна, то выполнится этот метод
+    # Если какая-то конкретная вьюха не доступна, то выполнится этот метод
     def inaccessible_callback(self, name, **kwargs):
         # Тут обращаемся к блюпринту security  его вьюхе login, Параметр next это та ссылка куда пользователь хотел попасть
         return redirect(url_for('security.login', next=request.url))
 
+
+# 21) flask admin создает объекты наших постов по своему, поэтому создание постов через саму админку приводит к пустому слагу и мы это исправляем
+class BaseModelView(ModelView):
+    # Переопределяем метод, который говорит, если модель изменяется или создается вызвать generate_slug()
+    def on_model_change(self, form, model, is_created):
+        model.generate_slug()
+        return super().on_model_change(form, model, is_created)
+
+
+
+# 16) В новом классе AdminView переопределим методы из ModelView, чтобы ограничить доступ для просмотра Post и Tag во вкладке /admin
+class AdminView(AdminMixin, ModelView):
+    pass
+
+
 # 18) Ограничение доступа целиком к админке
 # как я понял если мы вводим в сторку в браузере /admin выполняется эта функция, требует логина, если мы не админ, и вазвращает True если мы админ, и потом переходит в админку на окно home кторое указали мы ниже
-class HomeAdminView(AdminIndexView):
-    def is_accessible(self):
-        return current_user.has_role('admin')
+class HomeAdminView(AdminMixin, AdminIndexView):
+    pass
 
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('security.login', next=request.url))
+
+# 23) т.к. generate_slug импользуют только Post и Tag и изменяем в 92 и 89 строке AdminView на соответствующие
+class PostAdminView(AdminMixin, BaseModelView):
+    # изменим вид создания или изменения постов в админке
+    form_columns = ['title', 'body', 'tags']
+
+class TagAdminView(AdminMixin, BaseModelView):
+    form_columns = ['name', 'posts']
+
 
 
 
@@ -65,10 +87,10 @@ class HomeAdminView(AdminIndexView):
 admin = Admin(app, 'FlaskApp', url='/', index_view=HomeAdminView(name='Home'))
 
 # 4) Добвавление в админку нашу таблицу Post
-admin.add_view(AdminView(Post, db.session))
+admin.add_view(PostAdminView(Post, db.session))
 
 # 6) Добвавление в админку нашу таблицу Tag (потом в конфиг)
-admin.add_view(AdminView(Tag, db.session))
+admin.add_view(TagAdminView(Tag, db.session))
 
 
 # Flask secutiry
