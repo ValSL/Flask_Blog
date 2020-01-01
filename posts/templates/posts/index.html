@@ -17,14 +17,13 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li {% if not pages.has_prev %}class="page-item disabled"{% endif %}><a class="page-link" href="./?page={{ pages.prev_num }}">Previous</a></li>
+
             <li class="page-item">
                 {% for page in pages.iter_pages() %}
-                    <li {% if page == pages.page %}class="page-item active"{% endif %}>
+                     <li {% if page == pages.page %}class="page-item active"{% endif %}>
                         <a class="page-link" href="./?page={{ page }}">{{ page }}</a>
                     </li>
-
                 {% endfor %}
-
             </li>
 
             <li {% if not pages.has_next %}class="page-item disabled"{% endif %}><a class="page-link" href="./?page={{ pages.next_num }}">Next</a></li>

@@ -44,8 +44,9 @@
 
         <form class="form-inline my-2 my-lg-0" method="GET">
 
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q"
-                   value="{{ request.args.get('q', '') }}">{# метод get работает как со словарем, если под ключом 'q' что-то будет, он нам это вернет, если ничего не будет, то нам вернется пустая строка '' #}
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" {# name это имя переменной #}
+                   value="{{ request.args.get('q', '') }} {# value значение переменной с именем name='q',  #}">{# метод get работает как со словарем, если под ключом 'q' что-то будет, он нам это вернет, если ничего не будет, то нам вернется пустая строка '' #}
+                    {# request это глобальный объект для доступа к данным поступившего запроса, args это все получнные get праметры, и заполняем этот словарик методом get #}
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 
